@@ -57,6 +57,21 @@ app.get('/vehicles', async (req, res) => {
   }
 });
 
+// Add a new Vehicle (POST request)
+app.post('/vehicles', async (req, res) => {
+  // Make sure these match your frontend form and database columns
+  const { reg_no, model, type, capacity, odometer, acq_cost, status } = req.body;
+  try {
+    const newVehicle = await pool.query(
+      'INSERT INTO vehicles (reg_no, model, type, capacity, odometer, acq_cost, status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [reg_no, model, type, capacity, odometer, acq_cost, status]
+    );
+    res.json(newVehicle.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
