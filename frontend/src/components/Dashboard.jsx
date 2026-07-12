@@ -57,12 +57,10 @@ const Dashboard = () => {
         </div>
         <div className="d-flex align-items-center gap-3">
           <div className="text-end">
-            <h6 className="mb-0 text-dark fw-bold" style={{ fontSize: '0.9rem' }}>Raven K.</h6>
+            <h6 className="mb-0 text-dark fw-bold" style={{ fontSize: '0.9rem' }}>TransitOps</h6>
             <small className="text-muted" style={{ fontSize: '0.75rem' }}>Dispatcher</small>
           </div>
-          <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold shadow-sm" style={{ width: '40px', height: '40px' }}>
-            RK
-          </div>
+          
         </div>
       </div>
 

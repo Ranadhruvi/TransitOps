@@ -71,6 +71,16 @@ const VehicleRegistry = () => {
       .catch(err => alert(err.message));
   };
 
+  const handleStatusChange = (id, newStatus) => {
+  fetch(`http://localhost:5000/vehicles/${id}/status`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status: newStatus })
+  })
+  .then(() => fetchVehicles()) // Refresh list to show changes
+  .catch(err => alert("Error updating status: " + err.message));
+};
+
   return (
     <div className="container-fluid p-4 bg-light min-vh-100">
       <div className="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
@@ -118,7 +128,20 @@ const VehicleRegistry = () => {
                 <td>{vehicle.capacity}</td>
                 <td>{vehicle.odometer}</td>
                 <td>{vehicle.acq_cost}</td>
-                <td><span className={getStatusBadge(vehicle.status)}>{vehicle.status}</span></td>
+                <td>
+                  {/* INTERACTIVE STATUS TOGGLE */}
+                  <select 
+                    value={vehicle.status} 
+                    onChange={(e) => handleStatusChange(vehicle.id, e.target.value)}
+                    className={`form-select form-select-sm ${getStatusBadge(vehicle.status)} text-white`}
+                    style={{ width: '130px' }}
+                  >
+                    <option value="Available">Available</option>
+                    <option value="In Shop">In Shop</option>
+                    <option value="Retired">Retired</option>
+                    <option value="On Trip">On Trip</option>
+                  </select>
+                </td>
               </tr>
             ))
           )}

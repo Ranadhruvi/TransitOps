@@ -12,6 +12,16 @@ const Maintenance = () => {
     status: 'In Shop'
   });
 
+  const handleStatusChange = (id, vehicle_id, newStatus) => {
+  fetch(`http://localhost:5000/maintenance/${id}/status`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status: newStatus, vehicle_id })
+  })
+  .then(() => window.location.reload()) // Refresh to update list and vehicle status
+  .catch(err => alert("Error updating status: " + err.message));
+};
+
   useEffect(() => {
     // Fetch Maintenance Logs
     fetch('http://localhost:5000/maintenance')
@@ -121,9 +131,16 @@ const Maintenance = () => {
                     <td>{log.cost}</td>
                     <td>{new Date(log.service_date).toLocaleDateString()}</td>
                     <td>
-                      <span className={`badge ${log.status === 'Completed' ? 'bg-success' : 'bg-warning text-dark'}`}>
-                        {log.status || 'In Shop'}
-                      </span>
+                      {/* Interactive Toggle */}
+                      <select 
+                        value={log.status || 'In Shop'} 
+                        onChange={(e) => handleStatusChange(log.id, log.vehicle_id, e.target.value)}
+                        className={`form-select form-select-sm ${log.status === 'Completed' ? 'bg-success text-white' : 'bg-warning text-dark'}`}
+                        style={{ width: '130px' }}
+                      >
+                        <option value="In Shop">In Shop</option>
+                        <option value="Completed">Completed</option>
+                      </select>
                     </td>
                   </tr>
                 ))
