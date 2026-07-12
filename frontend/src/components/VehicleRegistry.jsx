@@ -147,7 +147,6 @@ const VehicleRegistry = () => {
           )}
         </tbody>
       </table>
-      <small className="text-danger">Rule: Registration No. must be unique • Retired/In Shop vehicles are hidden from Trip Dispatcher</small>
 
       {/* --- ADD VEHICLE MODAL --- */}
       {showModal && (
