@@ -105,31 +105,70 @@ const Drivers = () => {
       </table>
 
       {/* --- ADD DRIVER MODAL --- */}
-      {showModal && (
+        {showModal && (
         <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog">
+            <div className="modal-dialog">
             <div className="modal-content">
-              <div className="modal-header">
+                <div className="modal-header">
                 <h5 className="modal-title">Add New Driver</h5>
                 <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
-              </div>
-              <form onSubmit={handleSubmit}>
+                </div>
+                <form onSubmit={handleSubmit}>
                 <div className="modal-body">
-                  <div className="mb-2">
-                    <label>Driver Name</label>
-                    <input type="text" className="form-control" name="name" onChange={handleInputChange} required />
-                  </div>
-                  {/* Add other inputs here similarly */}
+                    {/* Driver Name */}
+                    <div className="mb-3">
+                    <label className="form-label">Driver Name</label>
+                    <input type="text" className="form-control" name="name" value={formData.name} onChange={handleInputChange} required />
+                    </div>
+
+                    {/* License and Category */}
+                    <div className="row mb-3">
+                    <div className="col">
+                        <label className="form-label">License No.</label>
+                        <input type="text" className="form-control" name="license_number" value={formData.license_number} onChange={handleInputChange} required />
+                    </div>
+                    <div className="col">
+                        <label className="form-label">Category</label>
+                        <select className="form-select" name="category" value={formData.category} onChange={handleInputChange}>
+                        <option value="LMV">LMV</option>
+                        <option value="HMV">HMV</option>
+                        </select>
+                    </div>
+                    </div>
+
+                    {/* Expiry and Contact */}
+                    <div className="row mb-3">
+                    <div className="col">
+                        <label className="form-label">Expiry (MM/YYYY)</label>
+                        <input type="text" className="form-control" name="expiry" value={formData.expiry} onChange={handleInputChange} required />
+                    </div>
+                    <div className="col">
+                        <label className="form-label">Contact</label>
+                        <input type="text" className="form-control" name="phone" value={formData.phone} onChange={handleInputChange} required />
+                    </div>
+                    </div>
+
+                    {/* Status */}
+                    <div className="mb-3">
+                    <label className="form-label">Status</label>
+                    <select className="form-select" name="status" value={formData.status} onChange={handleInputChange}>
+                        <option value="Available">Available</option>
+                        <option value="On Trip">On Trip</option>
+                        <option value="Off Duty">Off Duty</option>
+                        <option value="Suspended">Suspended</option>
+                    </select>
+                    </div>
                 </div>
+                
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
-                  <button type="submit" className="btn btn-primary">Save Driver</button>
+                    <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                    <button type="submit" className="btn btn-primary">Save Driver</button>
                 </div>
-              </form>
+                </form>
             </div>
-          </div>
+            </div>
         </div>
-      )}
+        )}
     </div>
   );
 };
