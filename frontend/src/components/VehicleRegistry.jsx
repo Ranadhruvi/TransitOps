@@ -1,5 +1,4 @@
 import React from 'react';
-
 const VehicleRegistry = () => {
   return (
     <div className="container-fluid p-4 bg-light min-vh-100">
