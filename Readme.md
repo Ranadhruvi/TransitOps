@@ -19,7 +19,7 @@ Database:
 
 ## Team Members
 
-1.Dhruvi Rana 
+1.Dhruvi Rana (https://github.com/Ranadhruvi)
 2.Gita Surti
 3.Janvi Soni
 4.Arpan Bhavsar (https://github.com/arpan-bhavsar)
