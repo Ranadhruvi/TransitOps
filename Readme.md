@@ -19,7 +19,7 @@ Database:
 
 ## Team Members
 
-1.
-2.
-3.
-4.
+1.Dhruvi Rana 
+2.Gita Surti
+3.Janvi Soni
+4.Arpan Bhavsar
