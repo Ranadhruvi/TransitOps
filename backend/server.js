@@ -72,6 +72,52 @@ app.post('/vehicles', async (req, res) => {
   }
 });
 
+app.get('/drivers', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM drivers');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ==========================================
+// DRIVERS API ROUTES
+// ==========================================
+
+// 1. Get all Drivers
+app.get('/drivers', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM drivers');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 2. Add a new Driver (POST request)
+app.post('/drivers', async (req, res) => {
+  // Destructure all the fields sent from the frontend form
+  const { 
+    name, license_number, category, expiry, 
+    phone, trip_compl, safety, status 
+  } = req.body;
+
+  try {
+    const newDriver = await pool.query(
+      `INSERT INTO drivers 
+      (name, license_number, category, expiry, phone, trip_compl, safety, status) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+      RETURNING *`,
+      [name, license_number, category, expiry, phone, trip_compl, safety, status]
+    );
+    res.json(newDriver.rows[0]);
+  } catch (err) {
+    // If there is a database error (like a duplicate license number), send it back
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
