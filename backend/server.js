@@ -177,6 +177,45 @@ app.post('/maintenance', async (req, res) => {
   }
 });
 
+// ==========================================
+// FUEL EXPENSES API ROUTES
+// ==========================================
+
+// Get all Fuel Records
+app.get('/fuel', async (req, res) => {
+  try {
+    // Join with vehicles to get the registration number for the frontend
+    const result = await pool.query(`
+      SELECT fuel_expenses.*, vehicles.reg_no 
+      FROM fuel_expenses 
+      JOIN vehicles ON fuel_expenses.vehicle_id = vehicles.id
+      ORDER BY refuel_date DESC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Add a Fuel Record
+app.post('/fuel', async (req, res) => {
+  const { vehicle_id, refuel_date, volume_liters, total_cost, receipt_no } = req.body;
+  try {
+    const newFuel = await pool.query(
+      `INSERT INTO fuel_expenses 
+      (vehicle_id, refuel_date, volume_liters, total_cost, receipt_no) 
+      VALUES ($1, $2, $3, $4, $5) 
+      RETURNING *`,
+      [vehicle_id, refuel_date, volume_liters, total_cost, receipt_no]
+    );
+    res.json(newFuel.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+
 // Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
