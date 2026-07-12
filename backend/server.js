@@ -145,6 +145,38 @@ app.post('/trips', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// ==========================================
+// MAINTENANCE API ROUTES
+// ==========================================
+
+// Get all Maintenance Logs
+app.get('/maintenance', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM maintenance ORDER BY service_date DESC');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Add a Maintenance Log
+app.post('/maintenance', async (req, res) => {
+  const { vehicle_id, description, cost, service_date, status } = req.body;
+  try {
+    const newLog = await pool.query(
+      `INSERT INTO maintenance 
+      (vehicle_id, description, cost, service_date, status) 
+      VALUES ($1, $2, $3, $4, $5) 
+      RETURNING *`,
+      [vehicle_id, description, cost, service_date, status]
+    );
+    res.json(newLog.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
