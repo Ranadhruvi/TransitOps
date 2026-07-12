@@ -214,6 +214,46 @@ app.post('/fuel', async (req, res) => {
   }
 });
 
+// ==========================================
+// ANALYTICS API ROUTES
+// ==========================================
+
+app.get('/analytics/fuel-trends', async (req, res) => {
+  try {
+    // This SQL query groups fuel costs by month and year
+    const result = await pool.query(`
+      SELECT 
+        TO_CHAR(refuel_date, 'Mon YYYY') as month,
+        SUM(total_cost) as total_spent,
+        SUM(volume_liters) as total_liters
+      FROM fuel_expenses
+      GROUP BY TO_CHAR(refuel_date, 'Mon YYYY'), DATE_TRUNC('month', refuel_date)
+      ORDER BY DATE_TRUNC('month', refuel_date) ASC
+      LIMIT 6;
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/analytics/summary', async (req, res) => {
+  try {
+    // Get quick counts for the top dashboard cards
+    const vehicles = await pool.query("SELECT COUNT(*) FROM vehicles WHERE status = 'Available'");
+    const trips = await pool.query("SELECT COUNT(*) FROM trips WHERE status = 'Dispatched'");
+    const maintenance = await pool.query("SELECT SUM(cost) as total_repair_cost FROM maintenance");
+
+    res.json({
+      available_vehicles: vehicles.rows[0].count,
+      active_trips: trips.rows[0].count,
+      total_repair_cost: maintenance.rows[0].total_repair_cost || 0
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 
 // Start Server
