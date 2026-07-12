@@ -34,19 +34,22 @@ app.get('/users', async (req, res) => {
 });
 
 // 2. Add a new Trip (POST request)
+// Add a new Trip (UPDATED)
 app.post('/trips', async (req, res) => {
-  const { vehicle_id, source, destination } = req.body;
+  const { source, destination, vehicle_id, driver_id, cargo_weight, planned_distance } = req.body;
   try {
     const newTrip = await pool.query(
-      'INSERT INTO trips (vehicle_id, source, destination) VALUES ($1, $2, $3) RETURNING *',
-      [vehicle_id, source, destination]
+      `INSERT INTO trips 
+      (source, destination, vehicle_id, driver_id, cargo_weight, planned_distance) 
+      VALUES ($1, $2, $3, $4, $5, $6) 
+      RETURNING *`,
+      [source, destination, vehicle_id, driver_id, cargo_weight, planned_distance]
     );
     res.json(newTrip.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
-
 // 3. Get all Vehicles
 app.get('/vehicles', async (req, res) => {
   try {
@@ -117,7 +120,31 @@ app.post('/drivers', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+app.get('/trips', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM trips ORDER BY id DESC');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
+// Add a new Trip
+app.post('/trips', async (req, res) => {
+  const { source, destination, vehicle_id, driver_id, cargo_weight, planned_distance } = req.body;
+  try {
+    const newTrip = await pool.query(
+      `INSERT INTO trips 
+      (source, destination, vehicle_id, driver_id, cargo_weight, planned_distance) 
+      VALUES ($1, $2, $3, $4, $5, $6) 
+      RETURNING *`,
+      [source, destination, vehicle_id, driver_id, cargo_weight, planned_distance]
+    );
+    res.json(newTrip.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 // Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
