@@ -1,23 +1,22 @@
 require('dotenv').config();
 const express = require('express');
-const { Pool } = require('pg'); // PostgreSQL client
+const { Pool } = require('pg'); 
 const cors = require('cors');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Configure Pool with your PostgreSQL credentials
+// UPDATED: Configure Pool using the connection string from your .env
 const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: parseInt(process.env.DB_PORT) || 5432,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false // Required for most cloud providers like Neon
+  }
 });
 
 pool.connect()
-  .then(() => console.log('PostgreSQL connected successfully'))
+  .then(() => console.log('PostgreSQL connected successfully to Cloud Database'))
   .catch(err => console.error('Connection error', err.stack));
 
 const PORT = process.env.PORT || 5000;
