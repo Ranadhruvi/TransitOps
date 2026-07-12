@@ -150,17 +150,6 @@ const Login = () => {
               </button>
             </form>
 
-            {/* Scope Helper Text */}
-            <div className="mt-3 pt-4 border-top">
-              <p className="text-muted small mb-2">Access is scoped by role after login:</p>
-              <ul className="list-unstyled text-muted small" style={{ fontSize: '0.85rem', lineHeight: '1.8' }}>
-                <li>• Fleet Manager → Fleet, Maintenance</li>
-                <li>• Dispatcher → Dashboard, Trips</li>
-                <li>• Safety Officer → Drivers, Compliance</li>
-                <li>• Financial Analyst → Fuel & Expenses, Analytics</li>
-              </ul>
-            </div>
-
           </div>
         </div>
       </div>
